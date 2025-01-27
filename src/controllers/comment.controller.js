@@ -6,8 +6,16 @@ import {asyncHandler} from "../utils/asyncHandler.js"
 
 const getVideoComments = asyncHandler(async (req, res) => {
     //TODO: get all comments for a video
-    const {videoId} = req.params
-    const {page = 1, limit = 10} = req.query
+    try{
+        const {videoId} = req.params
+        const {page = 1, limit = 10} = req.query
+
+        const comments = await Comment.find({videoId}).sort({createdAt:-1})
+
+        next(new ApiResponse(200, comments))
+    } catch(error){
+        next(new ApiError(500, error.message))
+    }
 
 })
 
